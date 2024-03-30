@@ -1,12 +1,14 @@
-CC = gcc
-CFLAGS_COMMON = -Wall -Wextra -Wpedantic
-CFLAGS = $(CFLAGS_COMMON) -O3
-CFLAGS_DB = $(CFLAGS_COMMON) -ggdb
+CC := gcc
+CFLAGS_COMMON := -Wall -Wextra -pedantic
+CFLAGS := $(CFLAGS_COMMON) -O3
+CFLAGS_DB := $(CFLAGS_COMMON) -ggdb
 
-norm:
-	$(CC) ntt.c -o ntt $(CFLAGS)
-	./ntt
+OUT := ntt.exe
+
+default:
+	$(CC) ntt.c -o $(OUT) $(CFLAGS)
+	./$(OUT)
 
 db:
-	$(CC) ntt.c -o ntt $(CFLAGS_DB)
-	gdb ntt
+	$(CC) ntt.c -o $(OUT) $(CFLAGS_DB)
+	gdb $(OUT)

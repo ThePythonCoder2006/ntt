@@ -5,9 +5,43 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include <complex.h>
+
+#define __TIMER_IMPLEMENTATION__
+#include "timer.h"
 
 #define INP 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
+            1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
             1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
             1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
             1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, \
@@ -42,11 +76,11 @@
 
 #define LEN (sizeof((char[]){INP}))
 
-uint32_t
-powmod(uint32_t base, uint32_t exp, uint32_t m);
-uint32_t find_primitive_root(const uint32_t m, const uint32_t phi_m, const uint32_t *const facts_of_phi_n, const uint32_t num_facts);
-uint32_t find_prime_modulus(uint32_t max_val, uint32_t n);
+uint32_t powmod(uint32_t base, uint32_t exp, uint32_t m);
+uint32_t find_generator(const uint32_t N, const uint32_t phi_N, const uint32_t *const facts_of_phi_N, const uint32_t num_facts);
+uint32_t find_prime_modulus(uint32_t *c, uint32_t max_val, uint32_t n);
 uint8_t is_prime(uint32_t candidate);
+uint32_t factorise(uint32_t *facts, size_t facts_size, uint32_t a);
 
 void ntt_naive(uint32_t *X, size_t n, uint32_t N, uint32_t w);
 void intt_naive(uint32_t *X, size_t n, size_t n_inv, uint32_t N, uint32_t wn_inv);
@@ -63,38 +97,67 @@ int main(int argc, char **argv)
   printf("n = %u\n", (uint32_t)LEN);
 
   const uint32_t M = 5;
+  const uint32_t n = LEN;
 
-  const uint32_t N = find_prime_modulus(5, LEN);
-  printf("N = %u\n", N);
+  uint32_t c;
+  const uint32_t N = find_prime_modulus(&c, 5, n);
+  printf("c = %u\n", c);
+  printf("N = c*n + 1 = %u * %u + 1 = %u\n", c, n, N);
 
-  const uint32_t facts_of_phi_N[] = {2, FACTS_OF_K};
-  assert(N >= LEN && "N must be bigger than n");
+  uint32_t facts_of_phi_N[32] = {2}; // 2 because n = 2^k
+
+  uint32_t num_facts_of_phi_N = factorise(facts_of_phi_N + 1, 32, c) + 1; // plus one for the 2 factor introduced by n = 2^k
+
+  printf("{%u", facts_of_phi_N[0]);
+  for (uint32_t i = 1; i < num_facts_of_phi_N; ++i)
+    printf(",%u", facts_of_phi_N[i]);
+  printf("}\n");
+
+  assert(N >= n && "N must be bigger than n");
   assert(N >= M && "N must be bigger or equal to M");
 
-  uint32_t g = find_primitive_root(N, N - 1, facts_of_phi_N, num_of_facts_of_k + 1);
+  uint32_t g = find_generator(N, N - 1, facts_of_phi_N, num_facts_of_phi_N); // because N is prime, phi(N) == N - 1
   assert(g != 0 && "there exist no primitive root of unity mod N");
 
-  const uint32_t w = powmod(g, k, N);
-  assert(powmod(w, LEN, N) == 1 && "w must an n-th root of unity modulo N");
+  /*
+   * as g is a generator in F_N => g^(N - 1) === 1 (mod N)
+   * => g^(N - 1)/n is an n-th primitive root of unity mod N
+   * but (N - 1)/n = (c*n + 1 - 1)/n = (c*n)/n = c
+   * in consequence, g^c is an n-th primitive root of unity mod N
+   */
+  const uint32_t w = powmod(g, c, N);
+  assert(powmod(w, n, N) == 1 && "w must an n-th primitive root of unity modulo N");
   printf("g = %u\n"
          "w = %u\n",
          g, w);
 
-  printf("naive start\n");
-  fflush(stdout);
-  ntt_naive(X_naive, LEN, N, w);
-  printf("naive end\n");
+  // timer naive_timer;
+  // timer_start(&naive_timer);
+
+  // printf("naive start\n");
+  // fflush(stdout);
+  // ntt_naive(X_naive, n, N, w);
+  // printf("naive end\n");
+
+  // double naive_time = timer_stop(&naive_timer);
+  // printf("naive took : %lf s\n\n", naive_time);
+
+  timer recursive_timer;
+  timer_start(&recursive_timer);
+
   printf("recursive start\n");
   fflush(stdout);
-  ntt_recursive(X_recursive, LEN, N, w);
+  ntt_recursive(X_recursive, n, N, w);
   printf("recursive end\n");
 
-  // printf("idx|inp \tniv \trec\n");
-  // for (uint8_t i = 0; i < LEN; ++i)
-  // printf("%2u | %2u \t %2u \t %2u\n", i, X[i], X_naive[i], X_recursive[i]);
-  // if (X_naive[i] != X_recursive[i])
-  // printf("[WARNING] the two results were not the same : X_naive[%u] = %u != %u = X_recursive[%u]\n", i, X_naive[i], i, X_recursive[i]);
-  // putchar('\n');
+  double recursive_time = timer_stop(&recursive_timer);
+  printf("recursive took : %lf s\n", recursive_time);
+
+  printf("idx|inp \tniv \trec\n");
+  for (uint32_t i = 0; i < n; ++i)
+    if (X_naive[i] != X_recursive[i])
+      printf("[WARNING] the two results were not the same : X_naive[%u] = %u != %u = X_recursive[%u]\n", i, X_naive[i], X_recursive[i], i);
+  putchar('\n');
 
   return EXIT_SUCCESS;
 }
@@ -148,7 +211,10 @@ void intt_naive(uint32_t *X, size_t n, size_t n_inv, uint32_t N, uint32_t w_inv)
   return;
 }
 
-// n must be a power of two
+/*
+ * n must be a power of two
+ * wn must be an nth root of unity mod N
+ */
 void ntt_recursive(uint32_t *X, size_t n, uint32_t N, uint32_t wn)
 {
   // base case
@@ -205,9 +271,9 @@ void intt_recursive(uint32_t *X, size_t n, uint32_t N, uint32_t wn_inv)
     X1[i] = X[2 * i + 1];
   }
 
-  // compute recursive ntt
-  ntt_recursive(X0, n / 2, N, wn_inv * wn_inv % N);
-  ntt_recursive(X1, n / 2, N, wn_inv * wn_inv % N);
+  // compute recursive intt
+  intt_recursive(X0, n / 2, N, wn_inv * wn_inv % N);
+  intt_recursive(X1, n / 2, N, wn_inv * wn_inv % N);
 
   // compute the output with butterfly
   uint32_t w = 1;
@@ -217,7 +283,7 @@ void intt_recursive(uint32_t *X, size_t n, uint32_t N, uint32_t wn_inv)
     X[i + n / 2] = ((X0[i] + N) - ((w * X1[i]) % N)) % N;
     w = (w * wn_inv) % N;
 
-    // divide by two n times to divide by n in total
+    // divide by two n times to divide by 2^n in total
     X[i] /= 2;
     X[i + n / 2] /= 2;
   }
@@ -265,6 +331,7 @@ void mult_numbers(uint32_t *C, const size_t c_size, uint32_t *A, const size_t a_
 
 uint32_t powmod(uint32_t base, uint32_t exp, uint32_t m)
 {
+  // assert(base != 0 && exp != 0 && "0^0 is not defined !!!\n");
   if (exp == 0)
     return 1;
   uint64_t res = 1; // 64 bits to not worry about mult overflowing
@@ -275,24 +342,24 @@ uint32_t powmod(uint32_t base, uint32_t exp, uint32_t m)
   return res;
 }
 
-// returns 0 if no root exists
-uint32_t find_primitive_root(const uint32_t m, const uint32_t phi_m, const uint32_t *const facts_of_phi_n, const uint32_t num_facts)
+// returns 0 if no generator mod N exists
+uint32_t find_generator(const uint32_t N, const uint32_t phi_N, const uint32_t *const facts_of_phi_N, const uint32_t num_facts)
 {
   uint32_t g = 0;
-  for (uint32_t i = 2; i < m; ++i)
+  for (uint32_t i = 2; i < N; ++i)
   {
     /*
-     * check if i is a primitive root unity, if it is NOT it will have a period such that :
+     * check if i is a generator mod N, if it is NOT it will have a period such that :
      * i^(phi(N)/p) === 1 (mod N)
      * with p being a factor of phi(N)
      */
     uint8_t fail = 0;
     for (uint32_t j = 0; j < num_facts; ++j)
     {
-      if (facts_of_phi_n[j] == 1)
+      if (facts_of_phi_N[j] == 1)
         continue;
 
-      if (powmod(i, phi_m / facts_of_phi_n[j], m) == 1)
+      if (powmod(i, phi_N / facts_of_phi_N[j], N) == 1)
       {
         fail = 1;
         break;
@@ -306,21 +373,23 @@ uint32_t find_primitive_root(const uint32_t m, const uint32_t phi_m, const uint3
   return g;
 }
 
-uint32_t find_prime_modulus(uint32_t max_val, uint32_t n)
+uint32_t find_prime_modulus(uint32_t *c, uint32_t max_val, uint32_t n)
 {
-  uint32_t k = 0;
+  *c = 0;
 
   uint32_t mod = 1; // 0 * n + 1
   do
   {
-    ++k;
-    mod = k * n + 1;
+    ++(*c);
+    mod = (*c) * n + 1;
+
+    // we need to ensure mod > max_val such that for all vals <= max_val : val % mod == val
     if (mod <= max_val)
       continue;
     // printf("N = %u\n", mod);
   } while (!is_prime(mod));
 
-  uint32_t N = k * n + 1;
+  uint32_t N = (*c) * n + 1;
   return N;
 }
 
@@ -342,47 +411,70 @@ uint8_t is_prime(uint32_t candidate)
     for (uint32_t j = 0; j < offsets_count; ++j)
       if (candidate % (i + offsets[j]) == 0)
       {
-        printf("%u %% %u == 0\n", candidate, i + offsets[j]);
+        // printf("%u %% %u == 0\n", candidate, i + offsets[j]);
         return 0;
       }
 
   return 1;
 }
 
-void factorise(uint32_t *facts, size_t facts_size, uint32_t a)
+/*
+ returns the number of factors of a found
+ facts countains all factors of a that are strictly greater than 1
+*/
+uint32_t factorise(uint32_t *facts, size_t facts_size, uint32_t a)
 {
   assert(facts_size >= 1 && "facts array must be biger");
 
   if (is_prime(a))
   {
     facts[0] = a;
-    return;
+    return 1;
   }
 
-  if (a == 0 || a == 1)
+  // only case where facts contains factors less than 1
+  if (a == 0)
   {
-    facts[0] = a;
-    return;
+    facts[0] = 0;
+    return 1;
   }
-
-  if (a == 2 || a == 3 || a == 5)
-    return;
-
-  if (a % 2 == 0 || a % 3 == 0 || a % 5 == 0)
-    return;
-
-  const uint32_t offsets[] = {0, 4, 6, 10, 12, 16, 22, 24};
-  const size_t offsets_count = sizeof(offsets) / sizeof(offsets[0]);
+  if (a == 1)
+    return 0;
 
   size_t n = 0; // the number of spots already used in facts
+
+  // checks if a is a multiple of 2, 3 and 5, the further 2,3 and 5 factors of a do not matter as the loop does not try number that are multiples of 2, 3 and 5
+  if (a % 2 == 0)
+  {
+    a /= 2;
+    facts[n++] = 2;
+  }
+  if (a % 3 == 0)
+  {
+    a /= 3;
+    facts[n++] = 3;
+  }
+  if (a % 5 == 0)
+  {
+    a /= 5;
+    facts[n++] = 5;
+  }
+
+  // if the only factors of a left are trivial or already counted, i.e. a is 1, 2, 3 or 5 then we are done.
+  if (a == 1 || a == 2 || a == 3 || a == 5)
+    return n;
+
+  // all of the spokes of the wheel
+  const uint32_t offsets[] = {0, 4, 6, 10, 12, 16, 22, 24};
+  const size_t offsets_count = sizeof(offsets) / sizeof(offsets[0]);
 
   for (uint32_t i = 7; i * i < a; i += 30)
     for (uint32_t j = 0; j < offsets_count; ++j)
       if (a % (i + offsets[j]) == 0)
       {
         assert(facts_size >= n + 1 && "the facts array must be bigger");
-        facts[n + 1] = i + offsets[j];
+        facts[n++] = i + offsets[j];
       }
 
-  return;
+  return n;
 }
